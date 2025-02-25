@@ -1,129 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gcoeara Combat 2025 </title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gcoeara Combat 2025</title>
     <!-- Bootstrap 5.3 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-        }
-        .leaderboard-container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #1e1e1e;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
-        }
-        .leaderboard-title {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .team-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #292929;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            transition: transform 0.2s;
-        }
-        .team-card:hover {
-            transform: scale(1.02);
-        }
-        .team-logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 15px;
-        }
-        .team-info {
-            display: flex;
-            align-items: center;
-        }
-        .team-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        .team-score {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #00ffcc;
-        }
-        .combat-logo {
+      body {
+        background-color: #121212;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+      }
+
+      .leaderboard-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #1e1e1e;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+      }
+
+      .leaderboard-title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .team-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #292929;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        transition: transform 0.2s;
+      }
+
+      .team-card:hover {
+        transform: scale(1.02);
+      }
+
+      .team-logo {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 15px;
+      }
+
+      .team-info {
+        display: flex;
+        align-items: center;
+      }
+
+      .team-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .team-score {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #00ffcc;
+      }
+
+      .combat-logo {
         width: 150px;
         height: auto;
         display: block;
-        }
-        
+      }
     </style>
-</head>
-<body>
+  </head>
 
+  <body>
     <!-- Combat Logo and Title -->
-    <div class="container text-center header-container" style="display: flex; justify-content: center; align-items: center;">
-        <img src="combat2025logo.png" alt="Combat Logo" class="combat-logo"> 
-        <!-- <h1 class="combat-title">GCOEARA Combat 2K25</h1> -->
+    <div
+      class="container text-center header-container"
+      style="display: flex; justify-content: center; align-items: center"
+    >
+      <img src="/img/combat2025logo.png" alt="Combat Logo" class="combat-logo" />
+      <!-- <h1 class="combat-title">GCOEARA Combat 2K25</h1> -->
     </div>
 
-    <div style="text-align: center;">
-        <h1 class="combat-title">Gcoeara Combat 2K25</h1>
+    <div style="text-align: center">
+      <h1 class="combat-title">Gcoeara Combat 2K25</h1>
     </div>
 
     <div class="container leaderboard-container">
-        <h2 class="leaderboard-title">🏆 Combat Leaderboard</h2>
-        <div id="leaderboard">
-            <!-- Teams will be dynamically inserted here -->
-        </div>
+      <h2 class="leaderboard-title">🏆 Combat Leaderboard</h2>
+      <div id="leaderboard">
+        <!-- Teams will be dynamically inserted here -->
+      </div>
     </div>
 
     <!-- Bootstrap 5.3 JS (for dynamic sorting and other functionalities) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Sample team data (logo, name, score)
-        const teams = [
-            { logo: "Etsa-logo.jpg", name: "Entc", score: 120 },
-            { logo: "https://via.placeholder.com/50", name: "Mech", score: 250 },
-            { logo: "https://via.placeholder.com/50", name: "Auto", score: 180 },
-            { logo: "https://via.placeholder.com/50", name: "Instru", score: 300 },
-            { logo: "https://via.placeholder.com/50", name: "Civil", score: 90 },
-            { logo: "https://via.placeholder.com/50", name: "Comp", score: 90 },
-        ];
+      // table data
+      let globalData = []; // 🌍 Global variable to store API data
+     
+      const apiUrl ="https://script.googleusercontent.com/macros/echo?user_content_key=xlMRYAdCa2uXVyysa9kx3cOsEMfpTQWAZENyQy8lYCsUnHFxulXOmRzi4LPvm5xmXcNwzN1Me7fvsXlkL_2gNE4HKUHWb_QGm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDGjk5_KxNggd1xqSn0__AOguczRGl3B5QAGMvJEFvTptD5qXJzKHc42NTu15eLgEFjtEHOOAuiDhH8CJ2Ts5UOePEKRKUGnVtz9Jw9Md8uu&lib=M-4vI9viDcf35Qp5eVXJXZ-4BcBY44oiM";
+      // Fetch data and store in global variable
+      function fetchData() {
+        fetch(apiUrl)
+          .then((response) => response.json()) // Convert response to JSON
+          .then((data) => {
+            globalData = data;
+            //refresh div
+            let iteration=0;
+            teams.forEach((team) => {
+              //  console.log(team.score)
+               let span = document.querySelector(`#${team.score}`);
+               if (span) {
+                 span.innerHTML = ` ${data.data[0][iteration]}`;
+                 iteration++;
+                } 
+  });
+            console.log("Data stored in global variable:", globalData);
+            // updateTable(globalData); // Display data in table
+          })
+          .catch((error) => console.error("Error fetching data:", error));
+      }
+      // Function to update table with data
+      function updateTable(data, table_id) {
+        console.log(table_id);
+        // const userTableBody = document.getElementById(table_id ,tbody);
+        const userTableBody = document.querySelector(`#${table_id} tbody`);
 
-        function generateLeaderboard() {
-            // Sort teams in descending order based on scores
-            teams.sort((a, b) => b.score - a.score);
+        userTableBody.innerHTML = ""; // Clear old data
+        // console.log(userTableBody);
+        // data_1=data.data;
+        var j=0;
+        for(var i=0;i<25;i++){
+           if(data.data[1][i]==table_id){
+            j=i;
+           };
+        }
+        data_1 = data.data.slice(1);
+        let  boys_total=0;
+        let gir_total=0;
+        let sum=0;
+        data_1.forEach(row => {
+                 let boys = Number(row[j + 2]) || 0;
+                 let girls = Number(row[j + 3]) || 0;
+                //  console.log(girls)
+                 boys_total += boys;
+                 gir_total += girls;
+                 sum = boys_total + gir_total;
 
-            const leaderboard = document.getElementById("leaderboard");
-            leaderboard.innerHTML = ""; // Clear previous content
+                 if(row[j+1]=="Total Point"){
+                    const table_row = `
+                        <tr>
+                            <td>${row[j+1]}</td>
+                            <td >${boys_total}</td>
+                            <td >${gir_total}</td>
+                        </tr>
+                        <tr>
+                            <td>Score</td>
+                            <td colspan="2">${sum}</td>
+                            </tr>
+                    `;
+                    userTableBody.innerHTML += table_row;
 
-            teams.forEach(team => {
-                leaderboard.innerHTML += `
+                 }
+                 else{
+                    const table_row = `
+                        <tr>
+                            <td>${row[j+1]}</td>
+                            <td>${row[j+2]}</td>
+                            <td>${row[j+3]}</td>
+                        </tr>
+                    `;
+                    userTableBody.innerHTML += table_row;
+                }
+                });
+
+      
+
+      }
+
+      // // Function to refresh table (reuses globalData)
+      // function refreshTable() {
+      //     updateTable(globalData);  // Uses stored global data
+      // }
+
+      // Call function on page load
+      fetchData();
+      setInterval(() => {
+          fetchData();
+      }, 10000);
+      // Sample team data (logo, name, score)
+      const teams = [
+         { logo: "./img/mesa-logo.jpeg", name: "Mech", score: "mech" },
+        { logo: "./img/Etsa-logo.jpg", name: "ENTC", score: "entc" },
+        { logo: "https://via.placeholder.com/50", name: "Comp", score: "comp" },
+        { logo: "https://via.placeholder.com/50", name: "Instru", score: "instru" },
+        { logo: "https://via.placeholder.com/50", name: "Civil", score: "civil" },
+        { logo: "./img/aesa-logo.png", name: "Auto", score: "auto" },
+      ];
+
+      function generateLeaderboard() {
+        // Sort teams in descending order based on scores
+        teams.sort((a, b) => b.score - a.score);
+        const leaderboard = document.getElementById("leaderboard");
+        leaderboard.innerHTML = ""; // Clear previous content
+
+        teams.forEach((team) => {
+          leaderboard.innerHTML += `
+                <div class="row">
+                    <div class="col-12"> 
                     <div class="team-card">
                         <div class="team-info">
-                            <img src="${team.logo}" alt="${team.name}" class="team-logo">
+                            <img src="${team.logo}" alt="${
+            team.name
+          }" class="team-logo">
                             <span class="team-name">${team.name}</span>
                         </div>
-                        <span class="team-score">${team.score}</span>
+                        <span class="team-score " id="${team.score.replace(/\s+/g,"")}">--</span>
+                            <p>
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#${team.name.replace(
+                                  /\s+/g,
+                                  ""
+                                )}" aria-expanded="false" aria-controls="${team.name.replace(
+            /\s+/g,
+            ""
+          )}"  onclick=" setInterval(() => updateTable(globalData, '${team.name.replace(/\s+/g, "")}'), 5000);updateTable(globalData, '${team.name.replace(/\s+/g, "")}')
+">Score</button>
+                            </p>
                     </div>
+                    <div class="col-12 mb-3">
+                    <!-- table  -->
+                         <div >
+                         <div class="collapse "id="${team.name.replace(/\s+/g,"")}">
+            <div class="container-fluid card card-body bg-black text-primary p-0 " style="overflow:hidden">
+            <!-- start table content -->
+            <table class="table table-dark table-striped m-0 p-0">
+            <thead>
+              <tr>
+                <th scope="col">Game</th>
+                <th scope="col">Boys</th>
+                <th scope="col">Girls</th>
+              </tr>
+            </thead>
+            <tbody"> 
+                <tr></tr>    
+            </tbody>
+          </table>
+    <!-- start table content -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
                 `;
-            });
-        }
+        });
+      }
 
-        // Load leaderboard when the page loads
-        document.addEventListener("DOMContentLoaded", generateLeaderboard);
+      // Load leaderboard when the page loads
+      document.addEventListener("DOMContentLoaded", generateLeaderboard);
     </script>
 
-
-<h5 > will update soon.....</h5>
-
-</body>
+    <!-- <h5>will update soon.....</h5> -->
+  </body>
 </html>
