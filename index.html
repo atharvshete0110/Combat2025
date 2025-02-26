@@ -84,7 +84,11 @@
       class="container text-center header-container"
       style="display: flex; justify-content: center; align-items: center"
     >
-      <img src="combat2025logo.png" alt="Combat Logo" class="combat-logo" />
+      <img
+        src="combat2025logo.png"
+        alt="Combat Logo"
+        class="combat-logo"
+      />
       <!-- <h1 class="combat-title">GCOEARA Combat 2K25</h1> -->
     </div>
 
@@ -104,8 +108,31 @@
     <script>
       // table data
       let globalData = []; // 🌍 Global variable to store API data
-     
-      const apiUrl ="https://script.googleusercontent.com/macros/echo?user_content_key=xlMRYAdCa2uXVyysa9kx3cOsEMfpTQWAZENyQy8lYCsUnHFxulXOmRzi4LPvm5xmXcNwzN1Me7fvsXlkL_2gNE4HKUHWb_QGm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDGjk5_KxNggd1xqSn0__AOguczRGl3B5QAGMvJEFvTptD5qXJzKHc42NTu15eLgEFjtEHOOAuiDhH8CJ2Ts5UOePEKRKUGnVtz9Jw9Md8uu&lib=M-4vI9viDcf35Qp5eVXJXZ-4BcBY44oiM";
+
+
+
+      //function update when data chnage generateLeaderboard()
+      let obj = {
+        value: 0,
+      };
+
+      let proxy = new Proxy(obj, {
+        set(target, property, value) {
+          if (target[property] !== value) {
+            // Only update if the value is different
+            target[property] = value;
+            generateLeaderboard();
+          }
+          return true;
+        },
+      });
+
+      
+
+
+
+      const apiUrl =
+        "https://script.googleusercontent.com/macros/echo?user_content_key=xlMRYAdCa2uXVyysa9kx3cOsEMfpTQWAZENyQy8lYCsUnHFxulXOmRzi4LPvm5xmXcNwzN1Me7fvsXlkL_2gNE4HKUHWb_QGm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDGjk5_KxNggd1xqSn0__AOguczRGl3B5QAGMvJEFvTptD5qXJzKHc42NTu15eLgEFjtEHOOAuiDhH8CJ2Ts5UOePEKRKUGnVtz9Jw9Md8uu&lib=M-4vI9viDcf35Qp5eVXJXZ-4BcBY44oiM";
       // Fetch data and store in global variable
       function fetchData() {
         fetch(apiUrl)
@@ -113,16 +140,23 @@
           .then((data) => {
             globalData = data;
             //refresh div
-            let iteration=0;
-            teams.forEach((team) => {
-              //  console.log(team.score)
-               let span = document.querySelector(`#${team.score}`);
-               if (span) {
-                 span.innerHTML = ` ${data.data[0][iteration]}`;
-                 iteration++;
-                } 
-  });
-            console.log("Data stored in global variable:", globalData);
+            var temp=0;
+            for (
+              let iteration = 0;
+              iteration < branch_name.length;
+              iteration++
+            ) {
+              teams.forEach((team) => {
+                if (branch_name[iteration] == team.name) {
+                  team.score = Number(data.data[0][iteration]);
+                  temp=temp+team.score;
+                  // console.log(team.score)
+                }
+              });
+            }
+            proxy.value =temp;
+            //  console.log(teams)
+            // console.log("Data stored in global variable:", globalData);
             // updateTable(globalData); // Display data in table
           })
           .catch((error) => console.error("Error fetching data:", error));
@@ -136,28 +170,28 @@
         userTableBody.innerHTML = ""; // Clear old data
         // console.log(userTableBody);
         // data_1=data.data;
-        var j=0;
-        for(var i=0;i<25;i++){
-           if(data.data[1][i]==table_id){
-            j=i;
-           };
+        var j = 0;
+        for (var i = 0; i < 25; i++) {
+          if (data.data[1][i] == table_id) {
+            j = i;
+          }
         }
-        data_1 = data.data.slice(1);
-        let  boys_total=0;
-        let gir_total=0;
-        let sum=0;
-        data_1.forEach(row => {
-                 let boys = Number(row[j + 2]) || 0;
-                 let girls = Number(row[j + 3]) || 0;
-                //  console.log(girls)
-                 boys_total += boys;
-                 gir_total += girls;
-                 sum = boys_total + gir_total;
+        data_1 = data.data.slice(2);
+        let boys_total = 0;
+        let gir_total = 0;
+        let sum = 0;
+        data_1.forEach((row) => {
+          let boys = Number(row[j + 2]) || 0;
+          let girls = Number(row[j + 3]) || 0;
+          //  console.log(girls)
+          boys_total += boys;
+          gir_total += girls;
+          sum = boys_total + gir_total;
 
-                 if(row[j+1]=="Total Point"){
-                    const table_row = `
+          if (row[j + 1] == "Total Point") {
+            const table_row = `
                         <tr>
-                            <td>${row[j+1]}</td>
+                            <td>${row[j + 1]}</td>
                             <td >${boys_total}</td>
                             <td >${gir_total}</td>
                         </tr>
@@ -166,48 +200,56 @@
                             <td colspan="2">${sum}</td>
                             </tr>
                     `;
-                    userTableBody.innerHTML += table_row;
-
-                 }
-                 else{
-                    const table_row = `
+            userTableBody.innerHTML += table_row;
+          } else {
+            const table_row = `
                         <tr>
-                            <td>${row[j+1]}</td>
-                            <td>${row[j+2]}</td>
-                            <td>${row[j+3]}</td>
+                            <td>${row[j + 1]}</td>
+                            <td>${row[j + 2]}</td>
+                            <td>${row[j + 3]}</td>
                         </tr>
                     `;
-                    userTableBody.innerHTML += table_row;
-                }
-                });
-
-      
-
+            userTableBody.innerHTML += table_row;
+          }
+        });
       }
 
-      // // Function to refresh table (reuses globalData)
-      // function refreshTable() {
-      //     updateTable(globalData);  // Uses stored global data
-      // }
+  
 
       // Call function on page load
       fetchData();
       setInterval(() => {
-          fetchData();
-      }, 10000);
+        fetchData();
+      }, 5000);
       // Sample team data (logo, name, score)
+      const branch_name = ["Mech", "ENTC", "Comp", "Instru", "Civil", "Auto"];
       const teams = [
-         { logo: "mesa-logo.jpeg", name: "Mech", score: "mech" },
-        { logo: "Etsa-logo.jpg", name: "ENTC", score: "entc" },
-        { logo: "https://via.placeholder.com/50", name: "Comp", score: "comp" },
-        { logo: "https://via.placeholder.com/50", name: "Instru", score: "instru" },
-        { logo: "https://via.placeholder.com/50", name: "Civil", score: "civil" },
-        { logo: "aesa-logo.png", name: "Auto", score: "auto" },
+        { logo: "mesa-logo.jpeg", name: "Mech", score: "--" },
+        { logo: "Etsa-logo.jpg", name: "ENTC", score: "--" },
+        { logo: "https://via.placeholder.com/50", name: "Comp", score: "--" },
+        { logo: "https://via.placeholder.com/50", name: "Instru", score: "--" },
+        { logo: "https://via.placeholder.com/50", name: "Civil", score: "--" },
+        { logo: "aesa-logo.png", name: "Auto", score: "--" },
       ];
+      //update table
+// let updateInterval; // Store the interval ID globally
+// function startUpdatingTable(teamName) {
+//   // Clear the previous interval if it exists
+//   if (updateInterval) {
+//     clearInterval(updateInterval);
+//   }
+
+//   // Call updateTable immediately
+//   updateTable(globalData, teamName);
+
+//   // Start a new interval
+//   updateInterval = setInterval(() => updateTable(globalData, teamName), 5000);
+// }
 
       function generateLeaderboard() {
         // Sort teams in descending order based on scores
         teams.sort((a, b) => b.score - a.score);
+        console.log("lboard_loaded");
         const leaderboard = document.getElementById("leaderboard");
         leaderboard.innerHTML = ""; // Clear previous content
 
@@ -222,7 +264,7 @@
           }" class="team-logo">
                             <span class="team-name">${team.name}</span>
                         </div>
-                        <span class="team-score " id="${team.score.replace(/\s+/g,"")}">--</span>
+                        <span class="team-score ">${team.score}</span>
                             <p>
                                 <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#${team.name.replace(
                                   /\s+/g,
@@ -230,14 +272,16 @@
                                 )}" aria-expanded="false" aria-controls="${team.name.replace(
             /\s+/g,
             ""
-          )}"  onclick=" setInterval(() => updateTable(globalData, '${team.name.replace(/\s+/g, "")}'), 5000);updateTable(globalData, '${team.name.replace(/\s+/g, "")}')
-">Score</button>
+          )}"onclick="updateTable(globalData, '${team.name.replace(/\s+/g, "")}')">Score</button>
                             </p>
                     </div>
                     <div class="col-12 mb-3">
                     <!-- table  -->
                          <div >
-                         <div class="collapse "id="${team.name.replace(/\s+/g,"")}">
+                         <div class="collapse "id="${team.name.replace(
+                           /\s+/g,
+                           ""
+                         )}">
             <div class="container-fluid card card-body bg-black text-primary p-0 " style="overflow:hidden">
             <!-- start table content -->
             <table class="table table-dark table-striped m-0 p-0">
